@@ -28,7 +28,7 @@ public class RigidbodyFPSController : MonoBehaviour {
 	        // Calculate how fast we should be moving
 	        Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 	        targetVelocity = transform.TransformDirection(targetVelocity);
-			if (Input.GetButton("Srpint")) {
+			if (Input.GetButton("Sprint")) {
 				targetVelocity *= sprintSpeed;
 				Debug.Log("Sprint");
 			}
