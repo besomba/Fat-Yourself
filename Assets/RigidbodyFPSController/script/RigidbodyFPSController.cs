@@ -14,23 +14,24 @@ public class RigidbodyFPSController : MonoBehaviour {
 	public float maxVelocityChange = 10.0f;
 	public bool canJump = true;
 	public float jumpHeight = 2.0f;
+	public int numberOfWallJump = 2;
+	public int currentNumberOfWallJump = 0;
 	private bool grounded = false;
- 
- 
- 
+	public Transform PlayerBase;
+  
 	void Awake () {
 	    rigidbody.freezeRotation = true;
 	    rigidbody.useGravity = false;
 	}
  
 	void FixedUpdate () {
+		Debug.DrawRay(PlayerBase.position, PlayerBase.TransformDirection(Vector3.down), Color.red);
 	    if (grounded) {
 	        // Calculate how fast we should be moving
 	        Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 	        targetVelocity = transform.TransformDirection(targetVelocity);
 			if (Input.GetButton("Sprint")) {
 				targetVelocity *= sprintSpeed;
-				Debug.Log("Sprint");
 			}
 			else
 		        targetVelocity *= speed;
@@ -45,6 +46,7 @@ public class RigidbodyFPSController : MonoBehaviour {
 	        // Jump
 	        if (canJump && Input.GetButton("Jump")) {
 	            rigidbody.velocity = new Vector3(velocity.x, CalculateJumpVerticalSpeed(), velocity.z);
+				currentNumberOfWallJump++;
 	        }
 	    }
  
@@ -54,8 +56,13 @@ public class RigidbodyFPSController : MonoBehaviour {
 	    grounded = false;
 	}
  
-	void OnCollisionStay () {
-	    grounded = true;    
+	void OnCollisionStay (Collision collisionInfo) {
+		RaycastHit hit;
+		if (Physics.Raycast(PlayerBase.position, PlayerBase.TransformDirection(Vector3.down), out hit)) {
+			Debug.Log("hit");
+			if (Vector3.Distance(PlayerBase.position, hit.point) < 0.2)
+				grounded = true;
+		}
 	}
  
 	float CalculateJumpVerticalSpeed () {
