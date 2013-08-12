@@ -1,6 +1,9 @@
 using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(Rigidbody))]
+
+
 public class HPManager : MonoBehaviour {
 
     //HP
@@ -22,7 +25,13 @@ public class HPManager : MonoBehaviour {
         currentPv = defaultPv;
         scaleInitial = this.transform.localScale;
         scaleObjectif = this.transform.localScale;
+        PvChangement(0);
 	}
+
+    public int GetHP()
+    {
+        return currentPv;
+    }
 
     public void FixedUpdate()
     {
@@ -75,6 +84,7 @@ public class HPManager : MonoBehaviour {
         }
         scaleInitial = this.transform.localScale;
         startTime = Time.time;
+        rigidbody.mass = CalculScale(currentPv);
         scaleObjectif = new Vector3(CalculScale(currentPv), CalculScale(currentPv), CalculScale(currentPv));
     }
 

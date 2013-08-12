@@ -5,13 +5,27 @@ using System.Collections;
 [RequireComponent (typeof (RigidbodyFPSController))]
 [RequireComponent (typeof (MainGun))]
 [RequireComponent (typeof (MouseLook))]
+[RequireComponent (typeof (HPManager))]
+[RequireComponent (typeof (MineManager))]
+
 
 public class InputManager : MonoBehaviour {
-	
+
+    public int mineCoast;
+    public int rocketCoast;
+
+    [HideInInspector]
 	public RigidbodyFPSController Player;
+    [HideInInspector]
 	public Gapnel grapnel;
-	public MainGun mainGun;
-	public AnnimatioManager animatioManager;
+    [HideInInspector]
+    public MainGun mainGun;
+    [HideInInspector]
+    public AnnimatioManager animatioManager;
+    [HideInInspector]
+    public HPManager hpManager;
+    [HideInInspector]
+    public MineManager mineManager;
 
 	// Use this for initialization
 	void Start () {
@@ -19,6 +33,8 @@ public class InputManager : MonoBehaviour {
 		grapnel = GetComponent<Gapnel>();
 		mainGun = GetComponent<MainGun>();
 		animatioManager = GetComponent<AnnimatioManager>();
+        hpManager = GetComponent<HPManager>();
+        mineManager = GetComponent<MineManager>();
 	}
 	
 	// Update is called once per frame
@@ -47,9 +63,11 @@ public class InputManager : MonoBehaviour {
 		else
 			animatioManager.jump();
 	}
-	
-	void mainGunFire() {
-		if (Input.GetMouseButtonDown(1)) {
+
+    private void mainGunFire()
+    {
+        if (Input.GetMouseButtonDown(1) && hpManager.GetHP() > rocketCoast * 2)
+        {
 			mainGun.prepareFire();
 			
 		}
@@ -59,11 +77,13 @@ public class InputManager : MonoBehaviour {
 		if (Input.GetMouseButtonUp(1)) {
 			mainGun.fireBullet();
 			animatioManager.RightFire();
+            hpManager.PvChangement(-rocketCoast);
 		}
 		animatioManager.RightStopFire();
 	}
-	
-	void grapnelFire(){
+
+    private void grapnelFire()
+    {
 		if (Input.GetMouseButtonDown(0)) {
 			grapnel.fire();
 			animatioManager.leftFire();
@@ -71,9 +91,19 @@ public class InputManager : MonoBehaviour {
 		animatioManager.leftStopFire();
 		
 	}
-	
+
+    private void mineFire()
+    {
+        if (Input.GetMouseButton(2) && hpManager.GetHP() > mineCoast * 2)
+        {
+            if (mineManager.Shoot())
+                hpManager.PvChangement(-mineCoast);
+        }
+    }
+
 	void Update () {
 		mainGunFire();
 		grapnelFire();
+        mineFire();
 	}
 }

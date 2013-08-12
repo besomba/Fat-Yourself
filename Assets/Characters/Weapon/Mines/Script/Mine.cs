@@ -1,9 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(SphereCollider))]
-[RequireComponent(typeof(Rigidbody))]
-
 public class Mine : MonoBehaviour {
 
     public float timer;
@@ -18,58 +15,99 @@ public class Mine : MonoBehaviour {
     private bool annimationPlayed = false;
     public float explosionRadius;
     private bool explosionDone = false;
+    private bool isActive = false;
 
+    public float triggerCoolDown = 0.5f;
+    private float startTimeTrigger;
+
+    private bool isTriggered = false;
 	// Use this for initialization
 	void Start () {
         initialTime = Time.time;
-        collider.isTrigger = false;
-        collider.enabled = true;
         particles.Stop();
+
+        if (collider == null)
+            collider = GetComponent<SphereCollider>();
+        if (particles == null)
+            particles = GetComponent<ParticleSystem>();
 	}
 	
 	void FixedUpdate () {
         if (initialTime + timer <= Time.time)
         {
-            if (collider.isTrigger == false)
+            if (isActive == false)
             {
                 Activation();
-                Debug.Log("Activation");
             }
-            else if (annimationPlayed == false)
+            else if (explosionDone && annimationPlayed == false)
             {
                 Explosion();
-                Debug.Log("Explosion");
-                initialTime = Time.time;
-                annimationPlayed = true;
-                for (int i = 0; i < this.transform.GetChildCount(); i++)
-                {
-                    this.transform.GetChild(i).gameObject.SetActive(false);
-                }
-                timer = 0.2f;
             }
-            else if (annimationPlayed == true)
+            else if (explosionDone == true && annimationPlayed == true)
             {
-                Debug.Log("Destroy");
-                Destroy(this.gameObject);
+                Destroy(this.transform.parent.gameObject);
             }
-        }
-        if (explosionDone)
-        {
-            DisableMine();
-        }
-        else if (annimationPlayed)
-        {
-            explosionDone = true;
         }
 	}
 
     void OnTriggerEnter(Collider other)
     {
+        if (!isTriggered)
+        {
+            if (other.tag == "Player")
+            {
+                isTriggered = true;
+                startTimeTrigger = Time.time;
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        if (startTimeTrigger + triggerCoolDown <= Time.time)
+        {
+            return;
+        }
+
         Rigidbody mine = other.gameObject.GetComponent<Rigidbody>();
 
         if (mine != null)
         {
-            if (mine.isKinematic == false)
+            if (mine.tag == "Player" || mine.tag == "Mine" || mine.tag == "DynamicTrap" )
+            {
+                Debug.Log("Pock");
+                mine.AddExplosionForce(explosionPower, this.transform.position, explosionRadius);
+            }
+        }
+        explosionDone = true;
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        if (!isTriggered)
+        {
+            if (other.tag == "Player")
+            {
+                isTriggered = true;
+                startTimeTrigger = Time.time;
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        if (startTimeTrigger + triggerCoolDown <= Time.time)
+        {
+            return;
+        }
+
+        Rigidbody mine = other.gameObject.GetComponent<Rigidbody>();
+
+        if (mine != null && other.gameObject != this.transform.parent.gameObject)
+        {
+            if (mine.tag == "Player" || mine.tag == "Mine" || mine.tag == "DynamicTrap")
             {
                 Debug.Log("Pock");
                 mine.AddExplosionForce(explosionPower, this.transform.position, explosionRadius);
@@ -80,20 +118,20 @@ public class Mine : MonoBehaviour {
 
     private void Activation()
     {
-        collider.isTrigger = true;
         collider.enabled = true;
-        collider.radius = explosionRadius;
-    }
-
-    private void DisableMine()
-    {
-        rigidbody.isKinematic = true;
-        rigidbody.useGravity = false;
-        collider.enabled = false;
+        isActive = true;
     }
 
     private void Explosion()
     {
+        collider.radius = explosionRadius;
+        initialTime = Time.time;
+        annimationPlayed = true;
+        for (int i = 0; i < this.transform.GetChildCount(); i++)
+        {
+            this.transform.GetChild(i).gameObject.SetActive(false);
+        }
+        timer = 0.2f;
         particles.Play();
     }
 }
