@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Mine : MonoBehaviour {
 
@@ -22,6 +23,9 @@ public class Mine : MonoBehaviour {
 
     private bool isTriggered = false;
 	// Use this for initialization
+
+    private List<GameObject> hited;
+
 	void Start () {
         initialTime = Time.time;
         particles.Stop();
@@ -30,6 +34,8 @@ public class Mine : MonoBehaviour {
             collider = GetComponent<SphereCollider>();
         if (particles == null)
             particles = GetComponent<ParticleSystem>();
+
+        hited = new List<GameObject>();
 	}
 	
 	void FixedUpdate () {
@@ -50,7 +56,7 @@ public class Mine : MonoBehaviour {
         }
 	}
 
-    void OnTriggerEnter(Collider other)
+    private void MyTrigger(Collider other)
     {
         if (!isTriggered)
         {
@@ -74,46 +80,29 @@ public class Mine : MonoBehaviour {
 
         if (mine != null)
         {
-            if (mine.tag == "Player" || mine.tag == "Mine" || mine.tag == "DynamicTrap" )
+            if (mine.tag == "Player" || mine.tag == "Mine" || mine.tag == "DynamicTrap")
             {
+                foreach (GameObject ie in hited)
+                {
+                    if (ie == mine.gameObject)
+                        return;
+                }
                 Debug.Log("Pock");
+                hited.Add(other.gameObject);
                 mine.AddExplosionForce(explosionPower, this.transform.position, explosionRadius);
             }
         }
         explosionDone = true;
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        MyTrigger(other);
+    }
+
     void OnTriggerStay(Collider other)
     {
-        if (!isTriggered)
-        {
-            if (other.tag == "Player")
-            {
-                isTriggered = true;
-                startTimeTrigger = Time.time;
-            }
-            else
-            {
-                return;
-            }
-        }
-
-        if (startTimeTrigger + triggerCoolDown <= Time.time)
-        {
-            return;
-        }
-
-        Rigidbody mine = other.gameObject.GetComponent<Rigidbody>();
-
-        if (mine != null && other.gameObject != this.transform.parent.gameObject)
-        {
-            if (mine.tag == "Player" || mine.tag == "Mine" || mine.tag == "DynamicTrap")
-            {
-                Debug.Log("Pock");
-                mine.AddExplosionForce(explosionPower, this.transform.position, explosionRadius);
-            }
-        }
-        explosionDone = true;
+        MyTrigger(other);
     }
 
     private void Activation()
