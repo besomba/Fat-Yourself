@@ -15,7 +15,6 @@ public class BulletManager : MonoBehaviour {
 		power = _power;
 		direction = dir;
 		isLaunch = true;
-		Debug.Log(power);
 		GetComponent<BulletInpact>().explosionPower = power;
 	}
 	

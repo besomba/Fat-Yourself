@@ -18,4 +18,12 @@ public class MineManager : MonoBehaviour {
         }
         return false;
     }
+
+    public float GetCooldown()
+    {
+        float ret = (Time.time - startTime) * 100 / (cooldown);
+        if (ret > 100)
+            ret = 100;
+        return ret;
+    }
 }

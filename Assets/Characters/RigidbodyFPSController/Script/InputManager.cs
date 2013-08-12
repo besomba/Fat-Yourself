@@ -41,7 +41,6 @@ public class InputManager : MonoBehaviour {
 	void FixedUpdate() {
 		if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0) {
 			animatioManager.run();
-			Debug.Log("Move");
 			Vector3 target =  new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 			if (Input.GetButton("Sprint")) {
 				Player.Move(true, target);
@@ -57,7 +56,6 @@ public class InputManager : MonoBehaviour {
 			Player.jump();
 		}
 		if (Player.onTheGround()) {
-			Debug.Log("On the ground");
 			animatioManager.stopJump();
 		}
 		else

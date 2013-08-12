@@ -16,7 +16,15 @@ public class Gapnel : MonoBehaviour {
 	void Start () {
 		parentRigidbody =  GetComponent<Rigidbody>();
 	}
-	
+
+    public float GetCooldown()
+    {
+        float ret = (Time.time - saveTime) * 100 / (fireRate);
+        if (ret > 100)
+            ret = 100;
+        return ret;
+    }
+
 	public bool fire() {
 		if (Time.time > saveTime + fireRate) {
 			saveTime = Time.time;
@@ -34,7 +42,15 @@ public class Gapnel : MonoBehaviour {
 		}
 		return false;
 	}
-	
+
+    public bool inRange()
+    {
+        return (Physics.Raycast(rayCastSource.position,
+            rayCastSource.TransformDirection(Vector3.forward),
+            out hit,
+            grabDistance));
+    }
+
 	// Update is called once per frame
 	void Update () {
 		Debug.DrawRay(rayCastSource.position, rayCastSource.TransformDirection(Vector3.forward) * grabDistance, Color.red);

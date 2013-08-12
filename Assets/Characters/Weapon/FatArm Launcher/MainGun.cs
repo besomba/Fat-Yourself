@@ -21,7 +21,15 @@ public class MainGun : MonoBehaviour {
 		currentPower = minPower;
 		currentTime = -fireRate;
 	}
-	
+
+    public float GetCooldown()
+    {
+        float ret = (Time.time - currentFireRate) * 100 / (fireRate);
+        if (ret > 100)
+            ret = 100;
+        return ret;
+    }
+
 	public void prepareFire() {
 		if (currentFireRate + fireRate <= Time.time) {
 		currentTime = Time.time;

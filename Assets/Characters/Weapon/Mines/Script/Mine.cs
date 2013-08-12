@@ -87,7 +87,6 @@ public class Mine : MonoBehaviour {
                     if (ie == mine.gameObject)
                         return;
                 }
-                Debug.Log("Pock");
                 hited.Add(other.gameObject);
                 mine.AddExplosionForce(explosionPower, this.transform.position, explosionRadius);
             }

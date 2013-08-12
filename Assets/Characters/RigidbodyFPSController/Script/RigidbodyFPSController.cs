@@ -89,7 +89,6 @@ public class RigidbodyFPSController : MonoBehaviour {
 	public bool onTheGround() {
 		RaycastHit hit;
 		if (Physics.Raycast(PlayerBase.position, PlayerBase.TransformDirection(Vector3.down), out hit)) {
-			Debug.Log("hit");
 			Debug.DrawRay(PlayerBase.position, PlayerBase.TransformDirection(Vector3.down), Color.red);
 			if (Vector3.Distance(PlayerBase.position, hit.point) < 1) {
 				grounded = true;
@@ -102,7 +101,6 @@ public class RigidbodyFPSController : MonoBehaviour {
 	void OnCollisionStay (Collision collisionInfo) {
 		RaycastHit hit;
 		if (Physics.Raycast(PlayerBase.position, PlayerBase.TransformDirection(Vector3.down), out hit)) {
-			Debug.Log("hit");
 			Debug.DrawRay(PlayerBase.position, PlayerBase.TransformDirection(Vector3.down), Color.red);
 			if (Vector3.Distance(PlayerBase.position, hit.point) < 0.2)
 				grounded = true;
