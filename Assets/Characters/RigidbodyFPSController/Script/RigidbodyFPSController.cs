@@ -83,7 +83,7 @@ public class RigidbodyFPSController : MonoBehaviour {
 	    // We apply gravity manually for more tuning control
 	    rigidbody.AddForce(new Vector3 (0, -gravity * rigidbody.mass, 0));
  
-	    grounded = false;
+	    grounded = onTheGround();
 	}
  
 	public bool onTheGround() {
