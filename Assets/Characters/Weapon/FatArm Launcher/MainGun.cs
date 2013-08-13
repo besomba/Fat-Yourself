@@ -53,7 +53,7 @@ public class MainGun : MonoBehaviour {
 			fire = false;
 			currentFireRate = Time.time;
 			currentBullet =  Instantiate(bulletPrefab, gun.position, gun.rotation) as Transform;
-			if (Physics.Raycast(raycastView.position, raycastView.TransformDirection(Vector3.forward), out hit)) {
+            if (Physics.Raycast(raycastView.position, raycastView.TransformDirection(Vector3.forward), out hit)) {
 				Vector3 dir =  hit.point - gun.position;
 				currentBullet.GetComponent<BulletManager>().launchBullet(currentPower, dir.normalized);
 			}

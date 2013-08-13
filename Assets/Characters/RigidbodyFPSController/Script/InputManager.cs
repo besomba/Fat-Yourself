@@ -64,7 +64,7 @@ public class InputManager : MonoBehaviour {
 
     private void mainGunFire()
     {
-        if (Input.GetMouseButtonDown(1) && hpManager.GetHP() > rocketCoast * 2)
+        if (Input.GetMouseButtonDown(1) && hpManager.GetHP() > rocketCoast * 2 && mainGun.GetCooldown() == 100)
         {
 			mainGun.prepareFire();
 			
@@ -72,7 +72,8 @@ public class InputManager : MonoBehaviour {
 		if (Input.GetMouseButton(1)) {
 			mainGun.loadFire();			
 		}
-		if (Input.GetMouseButtonUp(1)) {
+        if (Input.GetMouseButtonUp(1) && hpManager.GetHP() > rocketCoast * 2 && mainGun.GetCooldown() == 100)
+        {
 			mainGun.fireBullet();
 			animatioManager.RightFire();
             hpManager.PvChangement(-rocketCoast);
