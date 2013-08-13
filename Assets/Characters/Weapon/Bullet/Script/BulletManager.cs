@@ -23,7 +23,7 @@ public class BulletManager : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		if (isLaunch) {
 			body.MovePosition(transform.position + direction * speed * Time.deltaTime);
 		}

@@ -3,10 +3,12 @@ using System.Collections;
 
 public class GUIManager : MonoBehaviour {
 
-    public MineManager mineManager;
-    public MainGun gunManager;
-    public Gapnel gapnelManager;
-    public HPManager hpManager;
+    public GameObject player;
+
+    private MineManager mineManager;
+    private MainGun gunManager;
+    private Gapnel gapnelManager;
+    private HPManager hpManager;
 
     public GameObject coolDownMine;
     public GameObject coolDownHook;
@@ -27,6 +29,17 @@ public class GUIManager : MonoBehaviour {
     public float sizeMax;
 	
 	// Update is called once per frame
+
+    void Start()
+    {
+        if (player != null)
+        {
+            mineManager = player.GetComponent<MineManager>();
+            gunManager = player.GetComponent<MainGun>();
+            gapnelManager = player.GetComponent<Gapnel>();
+            hpManager = player.GetComponent<HPManager>();
+        }
+    }
 
     void ResizeGameObject(float nextValue, GameObject target)
     {

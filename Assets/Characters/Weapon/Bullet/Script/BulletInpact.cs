@@ -9,6 +9,7 @@ public class BulletInpact : MonoBehaviour
     public SphereCollider explosion;
     public float explosionPower;
     public float explosionRadius;
+    public GameObject grease;
 
     private bool die;
     private bool hit = false;
@@ -55,6 +56,11 @@ public class BulletInpact : MonoBehaviour
     void Die()
     {
         Destroy(this.gameObject);
-        //TODO Drop fat
+        for (int i = 0; i < 3; i++)
+        {
+            GameObject tmp = (GameObject)Instantiate(grease, this.transform.position, this.transform.rotation);
+            GraisePoint mp = tmp.GetComponentInChildren<GraisePoint>();
+            mp.fatValue = 1;
+        }
     }
 }

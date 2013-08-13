@@ -9,6 +9,7 @@ public class Mine : MonoBehaviour {
     public SphereCollider collider;
 
     public ParticleSystem particles;
+    public GameObject grease;
 
     private float initialTime;
     private bool isEnd = false;
@@ -51,6 +52,9 @@ public class Mine : MonoBehaviour {
             }
             else if (explosionDone == true && annimationPlayed == true)
             {
+                GameObject tmp = (GameObject)Instantiate(grease, this.transform.position, this.transform.rotation);
+                GraisePoint mp = tmp.GetComponentInChildren<GraisePoint>();
+                mp.fatValue = 5;
                 Destroy(this.transform.parent.gameObject);
             }
         }
