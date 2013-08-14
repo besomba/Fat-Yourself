@@ -13,6 +13,8 @@ public class InputManager : MonoBehaviour {
 
     public int mineCoast;
     public int rocketCoast;
+	public bool SoloGame = false;
+	public Transform ViewPoint;
 
     [HideInInspector]
 	public RigidbodyFPSController Player;
@@ -29,37 +31,42 @@ public class InputManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Player = GetComponent<RigidbodyFPSController>();
-		grapnel = GetComponent<Gapnel>();
-		mainGun = GetComponent<MainGun>();
-		animatioManager = GetComponent<AnnimatioManager>();
-        hpManager = GetComponent<HPManager>();
-        mineManager = GetComponent<MineManager>();
+		if (networkView.isMine || SoloGame) {
+			Player = GetComponent<RigidbodyFPSController>();
+			grapnel = GetComponent<Gapnel>();
+			mainGun = GetComponent<MainGun>();
+			animatioManager = GetComponent<AnnimatioManager>();
+	        hpManager = GetComponent<HPManager>();
+	        mineManager = GetComponent<MineManager>();
+			Camera.mainCamera.GetComponent<CameraManager>().setPosition(ViewPoint);
+		}
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate() {
-		if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0) {
-			animatioManager.run();
-			Vector3 target =  new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-			if (Input.GetButton("Sprint")) {
-				Player.Move(true, target);
+		if (networkView.isMine || SoloGame) {
+			if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0) {
+				animatioManager.run();
+				Vector3 target =  new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+				if (Input.GetButton("Sprint")) {
+					Player.Move(true, target);
+				}
+				else {
+					Player.Move(false, target);
+				}
 			}
-			else {
-				Player.Move(false, target);
+			else
+				animatioManager.stopRun();
+			if (Input.GetButtonDown("Jump")) {
+				animatioManager.jump();
+				Player.jump();
 			}
+			if (Player.onTheGround()) {
+				animatioManager.stopJump();
+			}
+			else
+				animatioManager.jump();
 		}
-		else
-			animatioManager.stopRun();
-		if (Input.GetButtonDown("Jump")) {
-			animatioManager.jump();
-			Player.jump();
-		}
-		if (Player.onTheGround()) {
-			animatioManager.stopJump();
-		}
-		else
-			animatioManager.jump();
 	}
 
     private void mainGunFire()
@@ -101,8 +108,10 @@ public class InputManager : MonoBehaviour {
     }
 
 	void Update () {
-		mainGunFire();
-		grapnelFire();
-        mineFire();
+		if (networkView.isMine || SoloGame) {
+			mainGunFire();
+			grapnelFire();
+	        mineFire();
+		}
 	}
 }
