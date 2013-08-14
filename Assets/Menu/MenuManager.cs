@@ -26,6 +26,14 @@ public class MenuManager : MonoBehaviour {
 	
 	private Vector2 ScrollLabel = Vector2.zero;
 	
+	
+	Rect getRectScreen(float x, float y, float w, float h) {
+		x = (x* Screen.width) / 1024;
+		y = (y* Screen.height) / 768;
+		w = (w* Screen.width) / 1024;
+		h = (h* Screen.height) / 768;
+		return new Rect(x, y, w,h);
+	}
 
 	// Use this for initialization
 	void goMenu(string menu) {
@@ -299,7 +307,7 @@ public class MenuManager : MonoBehaviour {
 	}
 	
     void OnGUI() {
-		GUI.BeginGroup (new Rect(0,0, Screen.width, Screen.height), Image);
+		//GUI.BeginGroup (new Rect(0,0, Screen.width, Screen.height), Image);
 		GUI.Label(new Rect(0,0, Screen.width,100), "FAT YOURSLEF", skin.customStyles[0]); 
 		GUI.skin = skin;
 		if (currentMenu == "login")
@@ -312,7 +320,6 @@ public class MenuManager : MonoBehaviour {
 			lobyMenu();
 		if (currentMenu == "connect")
 			ConnectMenu();
-		GUI.EndGroup();
     }
 
 	void Start () {
