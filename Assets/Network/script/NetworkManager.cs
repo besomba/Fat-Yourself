@@ -20,6 +20,8 @@ public class NetworkManager : MonoBehaviour {
 	public string playerName;
 	public bool	inGame = false;
 	public int playerMapLoaded = 0;
+	public string ip = "127.0.0.1";
+	public int port = 4245;
 	
 	public string gameName;
 	public string gamePassWord;
@@ -39,17 +41,22 @@ public class NetworkManager : MonoBehaviour {
 		LevelPlayList.RemoveAt(idx);
 	} 
 	
+	
 	void Start() {
 		instance = this;
 		DontDestroyOnLoad(this);
+	}
+	
+	void Update() {
+		instance = this;
 	}
 	
 	public void startServer(string serverName, string password, int maxUsers) {
 		gameName = serverName;
 		gamePassWord = password;
 		gameMaxPlayer = maxUsers;
-		Network.InitializeServer(maxUsers, 2500, false);
-		MasterServer.RegisterHost("TeamFight", gameName, gameName);
+		Network.InitializeServer(maxUsers, 4245, false);
+		//MasterServer.RegisterHost("TeamFight", gameName, gameName);
 		//Network.InitializeSecurity();
 	}
 	void OnServerInitialized() {
@@ -87,6 +94,8 @@ public class NetworkManager : MonoBehaviour {
 		else
 			server_mapLoaded();	
 	}
+	
+	
 	[RPC]
 	void client_startMap() {
 		foreach (GameObject obj in FindSceneObjectsOfType(typeof(GameObject)))
@@ -112,6 +121,11 @@ public class NetworkManager : MonoBehaviour {
 	[RPC]
 	void server_playerJoinRequest(string playerName, NetworkPlayer networkPlayer) {
 		networkView.RPC("Client_addPlayerToList", RPCMode.All, playerName, networkPlayer);
+		foreach (MPPlayer tmp in playerList) {
+			if (tmp.networkPlayer != networkPlayer) {
+				networkView.RPC("Client_addPlayerToList", networkPlayer, tmp.playerName, tmp.networkPlayer);
+			}
+		}
 	}
 	
 	[RPC]
