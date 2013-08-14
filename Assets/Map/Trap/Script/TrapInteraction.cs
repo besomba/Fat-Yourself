@@ -36,6 +36,7 @@ public class TrapInteraction : MonoBehaviour {
             startTime = Time.time;
             isStatic = false;
             growUp = !growUp;
+            inactive = false;
         }
         if (isStatic == false)
         {
@@ -54,6 +55,7 @@ public class TrapInteraction : MonoBehaviour {
                 if (minScale == this.transform.localScale)
                 {
                     isStatic = true;
+                    inactive = true;
                     startTime = Time.time;
                 }
             }
@@ -67,9 +69,11 @@ public class TrapInteraction : MonoBehaviour {
 
           if (other.gameObject.tag == "Player")
           {
-              Vector3 point =  other.contacts[0].point;
+              Vector3 forceVec = -other.rigidbody.velocity.normalized * 200f;
 
-              other.rigidbody.AddExplosionForce(100f, other.contacts[0].point, 1);
+              other.rigidbody.velocity = Vector3.zero;
+              other.rigidbody.angularVelocity = Vector3.zero;
+              other.rigidbody.AddForce(forceVec, ForceMode.Acceleration);
               other.gameObject.GetComponent<HPManager>().PvChangement(-10);
           }
     }
@@ -81,10 +85,7 @@ public class TrapInteraction : MonoBehaviour {
 
         if (other.gameObject.tag == "Player")
         {
-            Vector3 point = other.contacts[0].point;
-
-            other.rigidbody.AddExplosionForce(100f, other.contacts[0].point, 1);
-            other.gameObject.GetComponent<HPManager>().PvChangement(-2);
+            other.gameObject.GetComponent<HPManager>().PvChangement(-1);
         }
     }
 
