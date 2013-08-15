@@ -18,7 +18,6 @@ public class HPManager : MonoBehaviour {
     public float scaleSpeed;
     public float startTime;
 
-    //DEBUG
     public bool isRepawn = true;
 
 	public void Start () {

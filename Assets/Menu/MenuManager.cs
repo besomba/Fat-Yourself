@@ -203,9 +203,7 @@ public class MenuManager : MonoBehaviour {
 			}
 		}
 		foreach (MPPlayer tmp in NetworkManager.instance.playerList) {
-			Debug.Log(p);
 			if (p - 1 >= currentPlayerMin && p - 1 < currentPlayerMax) {
-				Debug.Log("pass");
 				GUI.Label(new Rect(0,(p - currentPlayerMin) * 50,150,50), tmp.playerName);
 			}
 			p++;
@@ -231,7 +229,6 @@ public class MenuManager : MonoBehaviour {
 			foreach (lvlInfo tmp in NetworkManager.instance.LevelPlayList) {
 				Debug.Log(pl);
 				if (pl - 1 >= currentPlayListMin && pl - 1 < currentPlayListMax) {
-					Debug.Log("pass");
 					string map = tmp.mapName;
 					GUI.Label(new Rect(0,(pl - currentPlayListMin) * 50,200,50), tmp.mapName, GUI.skin.customStyles[2]);
 					if (GUI.Button(new Rect(200,(pl - currentPlayListMin)*50,50,50), "-"))
@@ -260,7 +257,6 @@ public class MenuManager : MonoBehaviour {
 			foreach (lvlInfo tmp in NetworkManager.instance.Level) {
 				Debug.Log(pl);
 				if (l - 1 >= currentLevelListMin && l - 1 < currentLevelListMax) {
-					Debug.Log("pass");
 					string map = tmp.mapName;
 					GUI.Label(new Rect(0,(l - currentLevelListMin) * 50,200,50), tmp.mapName, GUI.skin.customStyles[2]);
 					if (GUI.Button(new Rect(200, (l - currentLevelListMin)*50,50,50), "-"))
