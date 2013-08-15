@@ -20,6 +20,7 @@ public class GUIManager : MonoBehaviour {
 
     public GameObject HPLogo;
     public GameObject center;
+    public TextMesh textHP;
 
     private float lastMineValue;
     private float lastHookValue;
@@ -51,6 +52,7 @@ public class GUIManager : MonoBehaviour {
         if (lastHPValue != hpManager.GetHP())
         {
             lastHPValue = hpManager.GetHP();
+            textHP.text = lastHPValue.ToString();
             HPLogo.transform.localScale = new Vector3(lastHPValue / 100f, lastHPValue / 100f, HPLogo.transform.localScale.z);
         }
 
@@ -79,7 +81,9 @@ public class GUIManager : MonoBehaviour {
             {
                 logoLauncher.SetActive(false);
             }
+
         }
+
         if (lastHookValue != gapnelManager.GetCooldown())
         {
             lastHookValue = gapnelManager.GetCooldown();

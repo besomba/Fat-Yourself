@@ -16,6 +16,7 @@ public class TrapTrigger : MonoBehaviour {
     private float startTime;
     private bool isActive = false;
     private int nb;
+    private bool lastGrowUp;
 
 	void Start () {
         target.enabled = false;
@@ -32,7 +33,7 @@ public class TrapTrigger : MonoBehaviour {
                 target.enabled = false;
                 isActive = false;
             }
-            else if (myTimer == Etype.singleShoot && startTime + 0.2f < Time.time && target.IsMin())
+            else if (myTimer == Etype.singleShoot && target.getGrowUp() != lastGrowUp && lastGrowUp == false)
             {
                 nb++;
                 if (nb >= 2)
@@ -41,6 +42,7 @@ public class TrapTrigger : MonoBehaviour {
                     isActive = false;
                 }
             }
+            lastGrowUp = target.getGrowUp();
         }
     }
 
@@ -53,6 +55,7 @@ public class TrapTrigger : MonoBehaviour {
             if (myTimer == Etype.singleShoot)
             {
                 target.Raz();
+                target.startTime -= target.timerAtMinAndMax;
                 nb = 0;
             }
             startTime = Time.time;

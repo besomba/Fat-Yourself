@@ -1,9 +1,10 @@
 using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(HPManager))]
+
 public class respawnManager : MonoBehaviour {
 	
-	public bool testRespawn = false;
 	public float respawnTime = 5;
 	private float currentRespawnTime = 0;
 	private bool canRespawn = false;
@@ -27,14 +28,11 @@ public class respawnManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (testRespawn) {
-			testRespawn = false;
-			respawn();
-		}
 		if (canRespawn &&
 			currentRespawnTime + respawnTime <= Time.time) {
 			canRespawn = false;
 			transform.position = respawnPosition;
+            this.GetComponent<HPManager>().Respawn();
 		}
 	}
 }

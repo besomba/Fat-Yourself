@@ -22,11 +22,13 @@ public class TrapMouvement : MonoBehaviour {
     public float timerAtMinAndMax;
     public float speed;
     public float initValue;
+    public bool isLooping = true;
 
     private bool growUp;
     private bool isStatic;
 
-    private float startTime;
+    [HideInInspector]
+    public float startTime;
     private Vector3 maxScale;
     private Vector3 minScale;
 
@@ -75,7 +77,7 @@ public class TrapMouvement : MonoBehaviour {
                 if (mouvement == EMouv.Translation)
                 {
                     this.transform.localPosition = Vector3.Slerp(minScale, maxScale, (Time.time - startTime) / speed);
-                    if (maxScale == this.transform.localPosition)
+                    if ((lastValue == this.transform.localPosition && lastValue != minScale) || maxScale == this.transform.localPosition)
                     {
                         Raz();
                     }
@@ -86,7 +88,7 @@ public class TrapMouvement : MonoBehaviour {
                     this.transform.localEulerAngles = Vector3.Slerp(minScale, maxScale, (Time.time - startTime) / speed);
                     if ((lastValue == this.transform.localEulerAngles && lastValue != minScale) || maxScale == this.transform.localEulerAngles)
                     {
-                        Raz(); ;
+                        Raz();
                     }
                     lastValue = this.transform.localEulerAngles;
                 }
@@ -96,7 +98,7 @@ public class TrapMouvement : MonoBehaviour {
                 if (mouvement == EMouv.Translation)
                 {
                     this.transform.localPosition = Vector3.Slerp(maxScale, minScale, (Time.time - startTime) / speed);
-                    if ( minScale == this.transform.localPosition)
+                    if ((lastValue == this.transform.localPosition && lastValue != maxScale) || minScale == this.transform.localPosition)
                     {
                         Raz();
                     }
@@ -117,22 +119,28 @@ public class TrapMouvement : MonoBehaviour {
 
     public void Raz()
     {
-        isStatic = true;
-        growUp = !growUp;
         startTime = Time.time;
-    }
+        isStatic = true;
 
-    public bool IsMin()
-    {
-        if (growUp && (lastValue == this.transform.localEulerAngles && lastValue != maxScale))
-            return true;
-        if (mouvement == EMouv.Translation)
+        if (isLooping)
         {
-            return (minScale == this.transform.localPosition);
+            growUp = !growUp;
         }
         else
         {
-            return (minScale == this.transform.localEulerAngles);
+            if (mouvement == EMouv.Translation)
+            {
+                this.transform.localPosition = minScale;
+            }
+            else
+            {
+                this.transform.localEulerAngles = minScale;
+            }
         }
+    }
+
+    public bool getGrowUp()
+    {
+        return growUp;
     }
 }

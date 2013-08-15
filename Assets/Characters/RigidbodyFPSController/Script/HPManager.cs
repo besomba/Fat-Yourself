@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
-
+[RequireComponent(typeof(respawnManager))]
 
 public class HPManager : MonoBehaviour {
 
@@ -19,7 +19,7 @@ public class HPManager : MonoBehaviour {
     public float startTime;
 
     //DEBUG
-    public bool debug = false;
+    public bool isRepawn = true;
 
 	public void Start () {
         currentPv = defaultPv;
@@ -39,20 +39,10 @@ public class HPManager : MonoBehaviour {
         {
             Rescale();
         }
-    }
-
-    public void OnGUI()
-    {
-        if (debug)
+        if (currentPv <= 0)
         {
-            if (GUI.Button(new Rect(10, 10, 20, 20), "hp--"))
-            {
-                PvChangement(-10);
-            }
-            if (GUI.Button(new Rect(35, 10, 20, 20), "hp++"))
-            {
-                PvChangement(10);
-            }
+            currentPv = 0;
+            rigidbody.velocity = Vector3.zero;
         }
     }
 
@@ -73,7 +63,7 @@ public class HPManager : MonoBehaviour {
     {
         int prevHp = currentPv;
         currentPv += effect;
-        if (currentPv < 0)
+        if (currentPv <= 0)
         {
             die();
             return;
@@ -90,6 +80,18 @@ public class HPManager : MonoBehaviour {
 
     public void die()
     {
-        //TODO
+        if (!isRepawn)
+            return;
+        isRepawn = false;
+        currentPv = 0;
+        rigidbody.velocity = Vector3.zero;
+        this.GetComponent<respawnManager>().respawn();
+    }
+
+    public void Respawn()
+    {
+        currentPv = defaultPv;
+        PvChangement(0);
+        isRepawn = true;
     }
 }

@@ -6,7 +6,8 @@ public class MainGun : MonoBehaviour {
 	public float maxPower;
 	public float powerGrowRate;
 	private float currentTime;
-	private float currentPower;
+    [HideInInspector]
+	public float currentPower;
 	
 	public Transform raycastView;
 	public Transform gun;
