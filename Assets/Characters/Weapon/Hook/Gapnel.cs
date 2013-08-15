@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Gapnel : MonoBehaviour {
 
@@ -12,6 +13,7 @@ public class Gapnel : MonoBehaviour {
 	private RaycastHit hit;
 	public float fireRate = 1;
 	private float saveTime;
+	public List<string> grabableType = new List<string>();
 	
 	void Start () {
 		parentRigidbody =  GetComponent<Rigidbody>();
@@ -24,6 +26,14 @@ public class Gapnel : MonoBehaviour {
             ret = 100;
         return ret;
     }
+	
+	public bool CanGarb(GameObject hit) {
+		foreach (string gtag in grabableType) {
+			if (gtag == hit.tag)
+				return true;
+		}
+		return false;
+	}
 
 	public bool fire() {
 		if (Time.time > saveTime + fireRate) {
@@ -32,12 +42,26 @@ public class Gapnel : MonoBehaviour {
 			rayCastSource.TransformDirection(Vector3.forward),
 			out hit,
 			grabDistance)) {
-				GetComponent<RigidbodyFPSController>().currentNumberOfWallJump = 0;
-				Vector3 dir;
-				dir = hit.point - transform.position;
-				dir = dir.normalized * gradPower;
-				parentRigidbody.AddForce(dir, ForceMode.Impulse);
-				return true;
+				if (CanGarb(hit.transform.gameObject)) {
+					GetComponent<RigidbodyFPSController>().currentNumberOfWallJump = 0;
+					Vector3 dir;
+					dir = hit.point - transform.position;
+					dir = dir.normalized * (gradPower / 2);
+					Debug.Log ("grabableType");
+					//parentRigidbody.AddForce(dir, ForceMode.Impulse);
+					hit.rigidbody.AddForce(-dir, ForceMode.Impulse);
+					return true;
+				}
+				else {
+					GetComponent<RigidbodyFPSController>().currentNumberOfWallJump = 0;
+					Vector3 dir;
+					dir = hit.point - transform.position;
+					dir = dir.normalized * gradPower;
+					parentRigidbody.AddForce(dir, ForceMode.Impulse);
+					return true;
+				}
+					
+
 			}
 		}
 		return false;
