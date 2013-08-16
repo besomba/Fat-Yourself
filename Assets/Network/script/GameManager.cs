@@ -31,7 +31,9 @@ public class GameManager : MonoBehaviour {
         else if (gameType == Etype.Defrag)
         {
             GlobalSpawn global = FindObjectOfType(typeof(GlobalSpawn)) as GlobalSpawn;
-            GameObject player = global.meAsPlayer;
+            if (global == null)
+                return;
+            GameObject player = global.playerSave;
             if (player == null)
             {
                 isDone = false;
