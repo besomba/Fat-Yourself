@@ -12,8 +12,6 @@ public class Mine : MonoBehaviour {
     public GameObject grease;
 
     private float initialTime;
-    private bool isEnd = false;
-    private bool isDead = false;
     private bool annimationPlayed = false;
     public float explosionRadius;
     private bool explosionDone = false;

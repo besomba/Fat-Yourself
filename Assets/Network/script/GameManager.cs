@@ -11,18 +11,20 @@ public class GameManager : MonoBehaviour {
     }
 
     public Etype gameType;
+    public float gameTime;
+    public GUISkin skin;
 
     public void GameBegin()
     {
         if (gameType  == Etype.DeathMatch)
         {
-            Debug.Log("Pouuuuuuuettte");
             GameObject player = FindObjectOfType(typeof(RigidbodyFPSController)) as GameObject;
             DeathMatch dt = NetworkManager.instance.gameObject.AddComponent<DeathMatch>();
             DeathMatchClient dtm = NetworkManager.instance.gameObject.AddComponent<DeathMatchClient>();
             dt.myId = GetMyId();
             dt.nbPlayers = NetworkManager.instance.gameMaxPlayer;
             dtm.ft = dt;
+            dtm.skin = skin;
         }
         else if (gameType == Etype.Defrag)
         {
@@ -37,6 +39,6 @@ public class GameManager : MonoBehaviour {
 
     private int GetMyId()
     {
-         return int.Parse(networkView.owner.ToString());
+        return int.Parse(NetworkManager.instance.networkView.owner.ToString());
     }
 }

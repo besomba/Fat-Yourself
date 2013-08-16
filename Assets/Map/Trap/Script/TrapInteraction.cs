@@ -8,7 +8,7 @@ public class TrapInteraction : MonoBehaviour {
     public bool isMoving;
     public float timer;
     public float speed;
-
+    public int damages = 10;
     private bool inactive = false;
 
     private float startTime;
@@ -74,7 +74,7 @@ public class TrapInteraction : MonoBehaviour {
               other.rigidbody.velocity = Vector3.zero;
               other.rigidbody.angularVelocity = Vector3.zero;
               other.rigidbody.AddForce(forceVec, ForceMode.Acceleration);
-              other.gameObject.GetComponent<HPManager>().PvChangement(-10);
+              other.gameObject.GetComponent<HPManager>().PvChangement(-damages);
           }
     }
 

@@ -3,10 +3,14 @@ using System.Collections;
 
 public class GlobalSpawn : MonoBehaviour {
 	public Transform playerPrefab;
-	// Use this for initialization
+    public Transform hudPrefab;
+    // Use this for initialization
 	public void GameBegin() {
-		Network.Instantiate(playerPrefab, transform.position, transform.rotation, 0);
-	}
+        Transform playe = Network.Instantiate(playerPrefab, transform.position, transform.rotation, 0) as Transform;
+        Instantiate(hudPrefab); 
+        GUIManager hud = Object.FindObjectOfType(typeof(GUIManager)) as GUIManager;
+        hud.player = playe.gameObject;
+    }
 	
 	void Start () {
 	

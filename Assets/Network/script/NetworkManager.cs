@@ -98,8 +98,11 @@ public class NetworkManager : MonoBehaviour {
 	
 	[RPC]
 	void client_startMap() {
-		foreach (GameObject obj in FindSceneObjectsOfType(typeof(GameObject)))
-		 obj.SendMessage("GameBegin");
+        foreach (GameObject obj in FindSceneObjectsOfType(typeof(GameObject)))
+        {
+            if (obj.tag == "Network")
+                obj.SendMessage("GameBegin");
+        }
 	}
 	
 	[RPC]
