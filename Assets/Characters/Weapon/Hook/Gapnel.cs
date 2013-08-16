@@ -13,7 +13,12 @@ public class Gapnel : MonoBehaviour {
 	private RaycastHit hit;
 	public float fireRate = 1;
 	private float saveTime;
+	public Transform fireLine;
+	public float fireLineTime = 3;
+	private float currentFireLineTime;
+	public Transform gunPosition;
 	public List<string> grabableType = new List<string>();
+	public Transform fireObj;
 	
 	void Start () {
 		parentRigidbody =  GetComponent<Rigidbody>();
@@ -34,11 +39,15 @@ public class Gapnel : MonoBehaviour {
 		}
 		return false;
 	}
-
+	
+	public void grab() {
+		
+	}
+	
 	public bool fire() {
 		if (Time.time > saveTime + fireRate) {
 			saveTime = Time.time;
-					if (Physics.Raycast(rayCastSource.position,
+			if (Physics.Raycast(rayCastSource.position,
 			rayCastSource.TransformDirection(Vector3.forward),
 			out hit,
 			grabDistance)) {
@@ -59,10 +68,8 @@ public class Gapnel : MonoBehaviour {
 					dir = dir.normalized * gradPower;
 					parentRigidbody.AddForce(dir, ForceMode.Impulse);
 					return true;
-				}
-					
-
-			}
+				}		
+		}
 		}
 		return false;
 	}
