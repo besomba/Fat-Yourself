@@ -14,31 +14,51 @@ public class GameManager : MonoBehaviour {
     public float gameTime;
     public GUISkin skin;
 
+    private bool isDone = false;
+
     public void GameBegin()
     {
         if (gameType  == Etype.DeathMatch)
         {
-            GameObject player = FindObjectOfType(typeof(RigidbodyFPSController)) as GameObject;
             DeathMatch dt = NetworkManager.instance.gameObject.AddComponent<DeathMatch>();
             DeathMatchClient dtm = NetworkManager.instance.gameObject.AddComponent<DeathMatchClient>();
             dt.myId = GetMyId();
             dt.nbPlayers = NetworkManager.instance.gameMaxPlayer;
             dtm.ft = dt;
             dtm.skin = skin;
+            isDone = true;
         }
         else if (gameType == Etype.Defrag)
         {
-            GameObject player = FindObjectOfType(typeof(RigidbodyFPSController)) as GameObject;
-            DeathMatch dt = this.gameObject.AddComponent<DeathMatch>();
-            DeathMatchClient dtm = player.AddComponent<DeathMatchClient>();
+            GlobalSpawn global = FindObjectOfType(typeof(GlobalSpawn)) as GlobalSpawn;
+            GameObject player = global.meAsPlayer;
+            if (player == null)
+            {
+                isDone = false;
+                return;
+            }
+
+            Race dt = NetworkManager.instance.gameObject.AddComponent<Race>();
+            RaceClient dtm = player.gameObject.AddComponent<RaceClient>();
             dt.myId = GetMyId();
-            dt.nbPlayers = GetComponent<NetworkManager>().gameMaxPlayer;
+            dt.nbPlayers = NetworkManager.instance.gameMaxPlayer;
             dtm.ft = dt;
+            dtm.skin = skin;
+            dt.cl = dtm;
+            isDone = true;
         }
     }
 
     private int GetMyId()
     {
         return int.Parse(NetworkManager.instance.networkView.owner.ToString());
+    }
+
+    void Update()
+    {
+        if (!isDone)
+        {
+            GameBegin();
+        }
     }
 }
